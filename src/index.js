@@ -3,6 +3,14 @@ import { config } from './config.js';
 import { TelegramClientWrapper } from './services/TelegramClientWrapper.js';
 import { UserBot } from './services/UserBot.js';
 import { Scheduler } from './scheduler.js';
+import express from 'express'
+
+const app = express()
+app.get("/present", (req, res) => {
+  res.json({
+    "message": "i am present"
+  });
+});
 
 (async () => {
   try {
@@ -23,7 +31,7 @@ import { Scheduler } from './scheduler.js';
     scheduler.start();
 
     // Handle graceful shutdown
-    process.on('SIGINT', async () => {
+    process.on("SIGINT", async () => {
       console.log("Shutting down gracefully...");
       await telegramClientWrapper.disconnect();
       process.exit(0);
@@ -33,3 +41,7 @@ import { Scheduler } from './scheduler.js';
     process.exit(1);
   }
 })();
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
